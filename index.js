@@ -47,7 +47,6 @@ function generateMarkup(componentName, labels) {
     if (newLabels.length > 0) {
         let printStringLabels = '';
         newLabels.forEach(label => printStringLabels += label);
-        printStringLabels = printStringLabels.substring(1, (printStringLabels.length - 1));
         xmlOutput.innerHTML = printStringLabels;
     }
 
