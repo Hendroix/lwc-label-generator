@@ -1,3 +1,4 @@
+const generateLabelsButton = document.getElementById("generateLabelsButton");
 const componentNameInput = document.getElementById("componentNameInput");
 const COMPONENT_NAME_PLACEHOLDER = "DeloreanDMC";
 const jsonInput = document.getElementById("jsonInput");
@@ -119,6 +120,7 @@ function showSection(sectionId) {
 }
 
 const init = () => {
+	generateLabelsButton.addEventListener("click", generateLabels, false);
 	componentNameInput.setAttribute("placeholder", COMPONENT_NAME_PLACEHOLDER);
 	jsonInput.setAttribute(
 		"placeholder",
