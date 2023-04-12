@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Salesforce Custom Labels Markup Generator</title>
@@ -7,33 +8,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
     <main>
-        <section class="grid container">
+        <section class="grid container relative">
             <label for="componentName">Component Name</label>
             <input id="componentNameInput" type="text" name="componentName" placeholder="componentName" />
             <label for="labelsJSON">Labels in JSON format</label>
             <textarea id="jsonInput" name="labelsJSON"></textarea>
             <button onclick="generateLabels()">Generate</button>
         </section>
-        <section id="output" class="grid container">
-            <div class="flex spread">
-                <label for="xml">CustomLabels XML Markup</label>
-                <button onclick="copy('xmlOutput')">Copy Text</button>
+
+        <section class="grid container" id="sectionGovernor" data-open-section-id="component" data-has-content="false">
+            <div class="header">
+                <button onclick="showSection('component')" id="componentButton">component.js</button>
+                <button onclick="showSection('labels')" id="labelsButton">labels.js</button>
+                <button onclick="showSection('xml')" id="xmlButton">XML Markup</button>
             </div>
-            <textarea readonly name="xml" id="xmlOutput"></textarea>
-            <div class="flex spread">
-                <label for="import">Import Statements for LWC</label>
-                <button onclick="copy('importOutput')">Copy Text</button>
+
+            <div id="component" class="tab-section hide">
+                <div class="flex spread">
+                    <label for="import">Import Statements for LWC</label>
+                    <button onclick="copy('importOutput')" class="copyButton">Copy</button>
+                </div>
+                <textarea readonly name="import" id="importOutput"></textarea>
+                <div class="flex spread">
+                    <label for="json">JSON for LWC</label>
+                    <button onclick="copy('labelsJSONOutput')" class="copyButton">Copy</button>
+                </div>
+                <textarea readonly name="json" id="labelsJSONOutput"></textarea>
             </div>
-            <textarea readonly name="import" id="importOutput"></textarea>
-            <div class="flex spread">
-                <label for="json">JSON for LWC</label>
-                <button onclick="copy('labelsJSONOutput')">Copy Text</button>
+            <div id="labels" class="tab-section hide">
+                <div class="grid relative textarea-with-copy-button">
+                    <div class="absolute right">
+                        <button onclick="copy('labelsjs')" class="copyButton">Copy</button>
+                    </div>
+                    <textarea readonly name="labels" id="labelsjs"></textarea>
+                </div>
             </div>
-            <textarea readonly name="json" id="labelsJSONOutput"></textarea>
+            <div id="xml" class="tab-section hide">
+                <div class="grid relative textarea-with-copy-button">
+                    <div class="absolute right">
+                        <button onclick="copy('xmlOutput')" class="copyButton">Copy</button>
+                    </div>
+                    <textarea readonly name="xml" id="xmlOutput"></textarea>
+                </div>
+            </div>
         </section>
     </main>
-    <footer></footer>
-    <script type="text/javascript" src="./index.js"></script>
-</body></html>
+    <script defer type="text/javascript" src="./index.js" />
+</body>
+
+</html>

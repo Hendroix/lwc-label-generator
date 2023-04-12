@@ -1,113 +1,134 @@
-const componentNameInput = document.getElementById('componentNameInput');
-const COMPONENT_NAME_PLACEHOLDER = 'DeloreanDMC';
-const jsonInput = document.getElementById('jsonInput');
+const componentNameInput = document.getElementById("componentNameInput");
+const COMPONENT_NAME_PLACEHOLDER = "DeloreanDMC";
+const jsonInput = document.getElementById("jsonInput");
 const JSON_PLACEHOLDER = {
-    labelName1: 'OK Griff, I\'ll do it.',
-    labelName2: 'Look at the time, you\'ve got less than 4 minutes, please hurry.',
-    labelName3: 'Doc, is everything all right, over?',
-    labelName4: 'Giddy up, hey, hoot!',
-    labelName5: 'Alright, McFly, you\'re asking for it, and now you\'re gonna get it.',
-    labelName6: 'I can\'t Emmett, I\'m scared!'
+	labelName1: "OK Griff, I'll do it.",
+	labelName2: "Look at the time, you've got less than 4 minutes, please hurry.",
+	labelName3: "Doc, is everything all right, over?",
+	labelName4: "Giddy up, hey, hoot!",
+	labelName5:
+		"Alright, McFly, you're asking for it, and now you're gonna get it.",
+	labelName6: "I can't Emmett, I'm scared!",
 };
-const xmlOutput = document.getElementById('xmlOutput');
-const importOutput = document.getElementById('importOutput');
-const labelsJSONOutput = document.getElementById('labelsJSONOutput');
+const xmlOutput = document.getElementById("xmlOutput");
+const importOutput = document.getElementById("importOutput");
+const labelsJSONOutput = document.getElementById("labelsJSONOutput");
+const labelsJSOutput = document.getElementById("labelsjs");
+const sectionGovernor = document.getElementById("sectionGovernor");
 
 function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+	if (typeof str === "string" && str.length > 0) {
+		return str.charAt(0).toUpperCase() + str.slice(1);
+	}
+	return str;
 }
 
 function generateMarkup(componentName, labels) {
-    const keys = Object.keys(labels);
+	const keys = Object.keys(labels);
 
-    const importStatements = [];
-    const newLabels = [];
-    const labelsJSON = [];
-    keys.forEach(key => {
-        let value = labels[key];
-        let fullName = componentName + capitalize(key);
+	const newLabels = generateXML(componentName, keys, labels);
+	if (newLabels.length > 0) {
+		xmlOutput.innerHTML = newLabels.join("");
+	}
 
-        newLabels.push(`
+	const importStatements = generateImportStatements(componentName, keys);
+	if (importStatements.length > 0) {
+		importOutput.innerHTML = importStatements.join("\n");
+	}
+	const labelsJSON = keys;
+	if (labelsJSON.length > 0) {
+		labelsJSONOutput.value = `labels = {
+    ${labelsJSON.join(",\n    ")}
+}`;
+	}
+
+	generateLabelsJsFile(importOutput.innerHTML, labelsJSON);
+	sectionGovernor.dataset.hasContent = true;
+}
+
+function generateXML(componentName, keys, labels) {
+	return keys.map((key) => {
+		return `
 <labels>
-    <fullName>${fullName}</fullName>
-    <categories>${componentName}</categories>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>${value.length > 80 ? value.substring(0, 77) + '...' : value}</shortDescription>
-    <value>${value}</value>
-</labels>`);
+	<fullName>${componentName + capitalize(key)}</fullName>
+	<categories>${componentName}</categories>
+	<language>en_US</language>
+	<protected>false</protected>
+	<shortDescription>${
+		labels[key].length > 80 ? labels[key].substring(0, 77) + "..." : labels[key]
+	}</shortDescription>
+	<value>${labels[key]}</value>
+</labels>`;
+	});
+}
 
-        importStatements.push(
-            `import ${key} from '@salesforce/label/c.${fullName}';`
-        );
+function generateImportStatements(componentName, keys) {
+	return keys.map((key) => {
+		return `import ${key} from '@salesforce/label/c.${
+			componentName + capitalize(key)
+		}';`;
+	});
+}
 
-        labelsJSON.push(`${key}`);
-    });
+function generateLabelsJsFile(importStatments, labels) {
+	labelsJSOutput.value = `${importStatments}
 
-    if (newLabels.length > 0) {
-        let printStringLabels = '';
-        newLabels.forEach(label => printStringLabels += label);
-        xmlOutput.innerHTML = printStringLabels;
-    }
-
-    if (importStatements.length > 0) {
-        let printStringImports = '';
-        importStatements.forEach(statement => printStringImports += (statement + '\n'));
-        printStringImports = printStringImports.substring(0, (printStringImports.length - 1));
-        importOutput.innerHTML = printStringImports;
-    }
-
-    if (labelsJSON.length > 0) {
-        let printLabelsJSON = 'labels = { \n';
-        labelsJSON.forEach((key, index) => {
-            printLabelsJSON += `    ${key}${index === (labelsJSON.length - 1) ? '': ','} \n`
-        });
-        printLabelsJSON += '}'
-        labelsJSONOutput.value = printLabelsJSON;
-    }
+export default { ${labels.join(", ")} };`;
 }
 
 function generateLabels() {
-    var componentName = componentNameInput.value;
-    var json = jsonInput.value;
+	var componentName = componentNameInput.value;
+	var json = jsonInput.value;
 
-    if (!componentName || !json) {
-        alert('Input is incomplete!');
-        return;
-    }
+	if (!componentName || !json) {
+		alert("Input is incomplete!");
+		return;
+	}
 
-    if (!safeParse(json)) {
-        alert('Input is not valid JSON');
-        return;
-    }
+	if (!safeParse(json)) {
+		alert("Input is not valid JSON");
+		return;
+	}
 
-    try {
-        generateMarkup(componentName, safeParse(json));
-    } catch (err) {
-        console.error(err);
-    }
+	try {
+		generateMarkup(componentName, safeParse(json));
+	} catch (err) {
+		console.error(err);
+	}
 }
 
 function safeParse(jsonBody) {
-    try {
-        return JSON.parse(jsonBody);
-    } catch (error) {
-        return false;
-    }
+	try {
+		return JSON.parse(jsonBody);
+	} catch (error) {
+		return false;
+	}
 }
 
 function copy(id) {
-    var copyElement = document.getElementById(id);
-    if (copyElement) {
-        copyElement.select();
-        copyElement.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-    }
+	var copyElement = document.getElementById(id);
+	if (copyElement) {
+		copyElement.select();
+		copyElement.setSelectionRange(0, 99999);
+		navigator.clipboard.writeText(copyElement.value);
+	}
 }
 
-async function onload() {
-    componentNameInput.setAttribute('placeholder', COMPONENT_NAME_PLACEHOLDER);
-    jsonInput.setAttribute('placeholder', JSON.stringify(JSON_PLACEHOLDER, null, 2));
+function showSection(sectionId) {
+	sectionGovernor.dataset.openSectionId = sectionId;
 }
 
-window.onload = onload();
+const init = () => {
+	componentNameInput.setAttribute("placeholder", COMPONENT_NAME_PLACEHOLDER);
+	jsonInput.setAttribute(
+		"placeholder",
+		JSON.stringify(JSON_PLACEHOLDER, null, 2)
+	);
+
+	if (location.hostname === "127.0.0.1") {
+		componentNameInput.value = COMPONENT_NAME_PLACEHOLDER;
+		jsonInput.innerHTML = JSON.stringify(JSON_PLACEHOLDER, null, 2);
+	}
+};
+
+init();

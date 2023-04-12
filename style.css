@@ -1,45 +1,134 @@
 .flex {
-    display: flex;
+	display: flex;
 }
 .spread {
-    justify-content: space-between;
+	justify-content: space-between;
 }
 
 .grid {
-    display: grid;
+	display: grid;
 }
 
-body .container:not(:last-of-type){
-    margin-bottom: 1rem;
+.hide {
+	display: none;
+}
+
+.relative {
+	position: relative;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.fixed {
+	position: fixed;
+}
+
+.right {
+	right: 0;
+}
+
+body .container:not(:last-of-type) {
+	margin-bottom: 1rem;
 }
 .container {
-    width: 75vw;
-    margin: auto;
-    border: 1px solid black;
-    background: lightgrey;
-    padding: 1rem;
-    border-radius: 10px;
+	width: 75vw;
+	margin: auto;
+	border: 1px solid black;
+	background: lightgrey;
+	padding: 1rem;
+	border-radius: 10px;
+}
+
+.header {
+	margin-bottom: 0.75rem;
+}
+
+.header button {
+	font-size: 1.25rem;
+	font-weight: 200;
+	height: 2rem;
+	width: 10rem;
+	cursor: pointer;
+}
+
+.copyButton {
+	text-transform: uppercase;
+	width: 3.5rem;
+	height: 2rem;
+	font-weight: 600;
+	background-color: lightgray;
+	color: blue;
+	cursor: pointer;
+}
+
+.copyButton:hover {
+	background-color: darkgray;
+	animation: focus-in-contract 0.15s linear 0s 1 normal forwards;
+}
+
+@keyframes focus-in-contract {
+	100% {
+		transform: scale(105%);
+	}
+}
+
+#sectionGovernor[data-has-content="false"] {
+	display: none;
+}
+
+#sectionGovernor[data-open-section-id=""] .header {
+	margin-bottom: unset;
+}
+
+#sectionGovernor[data-open-section-id="component"] #componentButton {
+	background-color: lightgray;
+}
+
+#sectionGovernor[data-open-section-id="component"] #component {
+	display: grid;
+}
+
+#sectionGovernor[data-open-section-id="labels"] #labelsButton {
+	background-color: lightgray;
+}
+
+#sectionGovernor[data-open-section-id="labels"] #labels {
+	display: grid;
+}
+
+#sectionGovernor[data-open-section-id="xml"] #xmlButton {
+	background-color: lightgray;
+}
+
+#sectionGovernor[data-open-section-id="xml"] #xml {
+	display: grid;
 }
 
 label {
-    font-size: 16px;
-    font-weight: bold;
+	font-size: 16px;
+	font-weight: bold;
 }
 
-input, textarea {
-    margin-bottom: .75rem;
+input,
+textarea {
+	margin-bottom: 0.75rem;
 }
 
 textarea {
-    resize: vertical;
-    max-height: 75vh;
-    min-height: 16vh;
+	resize: vertical;
+	max-height: 75vh;
+	min-height: 33vh;
+}
+
+#component textarea {
+	min-height: 15vh;
 }
 
 @media all and (max-width: 900px) {
-
-    .inputContainer {
-        width: 95vw;
-        margin: auto;
-    }
+	.inputContainer {
+		width: 95vw;
+		margin: auto;
+	}
 }
