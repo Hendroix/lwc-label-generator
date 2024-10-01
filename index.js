@@ -77,6 +77,14 @@ function generateLabelsJsFile(importStatments, labels) {
 export default { ${labels.join(", ")} };`;
 }
 
+
+jsonInput.addEventListener('paste', (event) => {
+	event.preventDefault();
+	let paste = (event.clipboardData || window.clipboardData).getData("text");
+	const formattedJSON = paste.replace(/'/g, '"');
+	jsonInput.innerHTML = formattedJSON;
+});
+
 function generateLabels() {
 	var componentName = componentNameInput.value;
 	var json = jsonInput.value;
